@@ -8,7 +8,7 @@ class Guido:
       args ([string]): list of non-default arguments names
       def_args ([string]): list of default arguments names
       filepath (string): full filepath
-      location ((int, int)): start line and end line of the function
+      location (int): start line and end line of the function
     """
     raise NotImplementedError
 
