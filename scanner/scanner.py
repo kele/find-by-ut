@@ -2,6 +2,12 @@ import compiler
 import json
 import os
 
+from guido import Guido
+
+
+_GUIDO = Guido()
+
+
 def scan_config(config_file='codebase.json'):
   config = json.load(open(config_file))
   for root, extensions in config:
@@ -16,16 +22,19 @@ def scan_dir(path, extensions):
 
 def ingest_file(path):
   ast = compiler.parseFile(path)
-  _recurse_on_node(ast)
+  visitor = FunctionVisitor(path)
+  compiler.walk(ast, visitor)
 
-def _recurse_on_node(node):
-  for child in node.getChildNodes():
-    _recurse_on_node(child)
-  if isinstance(node, compiler.ast.Function):
-    add_to_guido(node)
+class FunctionVisitor(compiler.visitor.ASTVisitor):
+  def __init__(self, filepath):
+    self.filepath = filepath
 
-def add_to_guido(node):
-  print node
+  def visitFunction(self, node):
+    _GUIDO.add_function(name=node.name,
+                        args=node.argnames,
+                        def_args=node.defaults,
+                        filepath=self.filepath,
+                        line=node.lineno)
 
 if __name__ == '__main__':
   scan_config()
