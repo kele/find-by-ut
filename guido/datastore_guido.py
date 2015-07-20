@@ -9,8 +9,7 @@ class FunctionMetadata(ndb.Model):
   def_args = ndb.JsonProperty()
   num_of_def_args = ndb.IntegerProperty()
   filepath = ndb.StringProperty()
-  location_start = ndb.IntegerProperty()
-  location_end = ndb.IntegerProperty()
+  location = ndb.IntegerProperty()
 
 class DatastoreGuido(guido.Guido):
   def add_function(self, name, args, def_args, filepath, location):
@@ -26,8 +25,7 @@ class DatastoreGuido(guido.Guido):
         def_args=def_args,
         num_of_def_args=len(def_args),
         filepath=filepath,
-        location_start=location[0],
-        location_end=location[1])
+        location=location)
     f.put()
     return True
 
