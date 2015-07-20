@@ -12,12 +12,10 @@ class Guido:
     """
     raise NotImplementedError
 
-  def search(self, min_args, max_args):
+  def search(self, num_args):
     """
     Args:
-      min_args (int): minimum number of arguments that the function should take
-      max_args (int or None): maximum number of arguments that the function can take
-        None means unlimited number of arguments
+      num_args (int): number of arguments that the function should be able to take
 
     Returns:
       {
