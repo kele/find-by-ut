@@ -16,7 +16,7 @@ def run(code):
   good = r.run_bulk(code, ".*")
   return '<br>'.join([g.name + " @ " + g.filepath for g in good])
 
-@app.route('/frontend')
+@app.route('/')
 def frontend():
   return render_template('submit.html')
 
