@@ -4,7 +4,6 @@
 
 from google.appengine.ext import ndb
 import guido
-import os
 import re
 
 class FunctionMetadata(ndb.Model):
