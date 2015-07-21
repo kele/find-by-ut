@@ -1,9 +1,11 @@
 <html>
     <head>
-        <title>Runner frontend</title>
+      <title>Find by unit test</title>
         <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
     </head>
     <body>
+        <img id="logo" src="{{ url_for('static', filename='miarki_kumple.png') }}"></img><br />
+
         <div id="container">
             <div class="title">
                 <h1>POST request with Flask</h1>
@@ -14,12 +16,6 @@
                   <textarea name="code" rows="5" cols="60">assert(FUNCTION("abc def") == "Abc Def")</textarea><br />
                   <input type="submit" />
                 </form>
-            </div>
-            <div class="title">
-                <h1>Flask code</h1>
-            </div>
-                <code><pre>
-                </pre></code>
             </div>
         </div>
     </body>

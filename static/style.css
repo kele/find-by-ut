@@ -104,3 +104,9 @@ form input[type=submit]{
     cursor: pointer;
     text-align: center;
 } 
+
+#logo {
+  margin-right: auto;
+  margin-left: auto;
+  display: block;
+}
