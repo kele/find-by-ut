@@ -34,8 +34,8 @@ def work():
 @app.route('/scan')
 def ingest():
   from scanner.scanner import main as main_scanner
-  main_scanner()
-  return "Done!"
+  count = main_scanner()
+  return "Done! Number of scanned entries: " + str(count)
 
 def run(code):
   from runner.python_runner import PythonRunner
