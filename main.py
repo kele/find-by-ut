@@ -46,3 +46,15 @@ def hello():
     res3 = '<br>'.join(get_results(num_args=1, file_regex=".*notfunny.*"))
     res = '<hr>'.join([res1, res2, res3])
     return res
+
+@app.route('/runner')
+def run():
+  from runner.python_runner import PythonRunner
+  r = PythonRunner()
+
+  test = """
+assert(FUNCTION('xyz') == 'zyx')
+"""
+  good = r.run_bulk(test, "codebase/.*")
+
+  return '<br>'.join([g.name for g in good])
