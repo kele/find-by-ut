@@ -6,4 +6,5 @@ RUN mkdir /codebase
 RUN git clone https://github.com/python-git/python.git /codebase/python
 RUN yes | pip install flask
 ADD . /app
+ADD ./small_python_project /codebase/small_python_project
 ENV PYTHONPATH=/app

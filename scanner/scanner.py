@@ -7,7 +7,7 @@ from guido import DefaultGuido
 
 
 _GUIDO = DefaultGuido()
-_DEFAULT_CONFIG = os.path.join(os.path.dirname(__file__), 'codebase.json')
+_DEFAULT_CONFIG = os.path.join(os.path.dirname(__file__), 'fake-codebase.json')
 
 def scan_config(config_file=_DEFAULT_CONFIG):
   config = json.load(open(config_file))
@@ -16,6 +16,7 @@ def scan_config(config_file=_DEFAULT_CONFIG):
 
 def scan_dir(path, extensions):
   """Recursively scan the directory located at path."""
+  logging.warning(path)
   for root, unused_dirs, files in os.walk(path):
     for f in files:
       if any([f.endswith(ext) for ext in extensions]):
@@ -34,11 +35,12 @@ class FunctionVisitor(compiler.visitor.ASTVisitor):
     self.filepath = filepath
 
   def visitFunction(self, node):
+    num_defaults = len(node.defaults)
     _GUIDO.add_lazy(name=node.name,
-                    args=node.argnames,
-                    def_args=node.defaults,
+                    args=node.argnames[:-num_defaults],
+                    def_args=node.argnames[-num_defaults:],
                     filepath=self.filepath,
-                    line=node.lineno)
+                    location=node.lineno)
 
 def main():
   scan_config()

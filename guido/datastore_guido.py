@@ -16,7 +16,7 @@ class FunctionMetadata(ndb.Model):
 
 
 class DatastoreGuido(guido.Guido):
-  def __init__(self, buffer_limit = 100000):
+  def __init__(self, buffer_limit = 10):
     self.buffer_limit = buffer_limit
     self.buffer = []
 
