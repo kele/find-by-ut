@@ -30,11 +30,12 @@ class FunctionVisitor(compiler.visitor.ASTVisitor):
     self.filepath = filepath
 
   def visitFunction(self, node):
-    _GUIDO.add_function(name=node.name,
-                        args=node.argnames,
-                        def_args=node.defaults,
-                        filepath=self.filepath,
-                        line=node.lineno)
+    _GUIDO.add_lazy(name=node.name,
+                    args=node.argnames,
+                    def_args=node.defaults,
+                    filepath=self.filepath,
+                    line=node.lineno)
 
 if __name__ == '__main__':
   scan_config()
+  _GUIDO.flush()

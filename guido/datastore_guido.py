@@ -11,13 +11,13 @@ class FunctionMetadata(ndb.Model):
   filepath = ndb.StringProperty()
   location = ndb.IntegerProperty()
 
-class DatastoreGuido(guido.Guido):
-  def add_function(self, name, args, def_args, filepath, location):
-    q = FunctionMetadata.query(FunctionMetadata.name == name)
-    q = q.filter(FunctionMetadata.filepath == filepath).get()
-    if q:
-      return False
 
+class DatastoreGuido(guido.Guido):
+  def __init__(self, cache_limit = 100000):
+    self.cache_limit = cache_limit
+    self.cache = []
+
+  def add_lazy(self, name, args, def_Args, filepath, location):
     f = FunctionMetadata(
         name=name,
         args=args,
@@ -26,8 +26,24 @@ class DatastoreGuido(guido.Guido):
         num_of_def_args=len(def_args),
         filepath=filepath,
         location=location)
-    f.put()
-    return True
+    self.cache.append(f)
+
+    if len(self.cache) >= self.cache_limit:
+      self.flush()
+
+  def add(self, name, args, def_args, filepath, location):
+    self.add_lazy(name, args, def_args, filepath, location)
+    self.flush()
+
+  def flush(self):
+    for f in self.cache:
+      q = FunctionMetadata.query(f.name == name)
+      q = q.filter(f.filepath == filepath).get()
+      if q:
+        return
+      f.put()
+
+    self.cache = []
 
   def search(self, num_args):
     q = FunctionMetadata.query(FunctionMetadata.num_of_args <= num_args)
