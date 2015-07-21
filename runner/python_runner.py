@@ -31,6 +31,7 @@ class PythonRunner(Runner):
 
   @staticmethod
   def _fill_test(test, filepath, function_name):
+    # TODO: should the import be somehow unimported?
     return """
 FUNCTION = imp.load_source("imported_modulename", "{filepath}").{function_name}
 """.format(filepath=filepath, function_name=function_name) + test
