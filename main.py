@@ -4,6 +4,8 @@ app.config['DEBUG'] = True
 from google.appengine.api.taskqueue import Queue, Task
 from google.appengine.api import taskqueue
 
+from flask import render_template, request, url_for
+
 from guido.datastore_guido import DatastoreGuido
 from scanner.scanner import scan_config
 
@@ -47,14 +49,19 @@ def hello():
     res = '<hr>'.join([res1, res2, res3])
     return res
 
-@app.route('/runner')
-def run():
+def run(code):
   from runner.python_runner import PythonRunner
   r = PythonRunner()
 
-  test = """
-assert(FUNCTION('xyz') == 'zyx')
-"""
-  good = r.run_bulk(test, "codebase/.*")
+  good = r.run_bulk(code, ".*")
 
-  return '<br>'.join([g.name for g in good])
+  return '\n'.join([g.name + "@" + g.filepath for g in good])
+
+@app.route('/frontend')
+def frontend():
+  return render_template('submit.html')
+
+@app.route('/backend', methods=['POST'])
+def backend():
+  code = request.form['code']
+  return render_template('action.html', code=code, result=run(code))

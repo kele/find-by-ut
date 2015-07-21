@@ -7,7 +7,7 @@ from guido import DefaultGuido
 
 
 _GUIDO = DefaultGuido()
-_DEFAULT_CONFIG = os.path.join(os.path.dirname(__file__), 'fake-codebase.json')
+_DEFAULT_CONFIG = os.path.join(os.path.dirname(__file__), 'fake_codebase.json')
 
 def scan_config(config_file=_DEFAULT_CONFIG):
   config = json.load(open(config_file))

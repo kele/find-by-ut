@@ -7,7 +7,7 @@ import re
 import sys
 import compiler
 
-from guido import Guido
+from guido.datastore_guido import DatastoreGuido as Guido
 
 _GUIDO = Guido()
 
@@ -21,8 +21,9 @@ class PythonRunner(Runner):
     try:
       exec(ready_to_run)
       return True
+    except AssertionError:
+      return False
     except:
-      print "Unexpected error: " + sys.exec_info()[0]
       return False
 
   def run_bulk(self, test_body, file_regex):
@@ -31,14 +32,14 @@ class PythonRunner(Runner):
       raise ValueError
 
     functions = _GUIDO.search(num_args, file_regex)
-    good = [f in functions if self.run(test_body, { "filepath" : f.filepath, "name" : f.name })]
+    good = [f for f in functions if self.run(test_body, { "filepath" : f.filepath, "name" : f.name })]
     return good
 
 
   @staticmethod
   def _get_num_args(test_body):
 
-    class FunctionVisitor(compiler.visitor.ASTVisitor):
+    class CallVisitor(compiler.visitor.ASTVisitor):
       def __init__(self):
         self.num_args = -1
 
