@@ -21,7 +21,7 @@ def hello():
 
 
     res1 = '<br>'.join(get_results(num_args=0))
-    res2 = '<br>'.join(get_results(num_args=1, directory_regex=".*this.*"))
-    res3 = '<br>'.join(get_results(num_args=1, directory_regex=".*notfunny.*"))
+    res2 = '<br>'.join(get_results(num_args=1, file_regex=".*this.*"))
+    res3 = '<br>'.join(get_results(num_args=1, file_regex=".*notfunny.*"))
     res = '<hr>'.join([res1, res2, res3])
     return res

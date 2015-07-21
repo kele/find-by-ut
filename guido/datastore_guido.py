@@ -1,5 +1,4 @@
 # TODO: add quicker lookup using directories as a tree like structure
-# TODO:
 
 
 from google.appengine.ext import ndb
@@ -49,10 +48,10 @@ class DatastoreGuido(guido.Guido):
 
     self.buffer = []
 
-  def search(self, num_args, directory_regex=None):
+  def search(self, num_args, file_regex=None):
     q = FunctionMetadata.query(FunctionMetadata.num_of_args <= num_args)
 
-    dir_regex = re.compile(directory_regex or ".*")
+    dir_regex = re.compile(file_regex or ".*")
     dir_matcher = lambda f: dir_regex.match(f.filepath)
 
     args_matcher = lambda f: f.num_of_args + f.num_of_def_args >= num_args

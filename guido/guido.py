@@ -26,11 +26,11 @@ class Guido:
     """
     raise NotImplementedError
 
-  def search(self, num_args, directory_regex=None):
+  def search(self, num_args, file_regex=None):
     """
     Args:
       num_args (int): number of arguments that the function should be able to take
-      directory_regex (string): regex to filter filepath
+      file_regex (string): regex to filter filepath
 
     Returns:
       {

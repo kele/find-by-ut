@@ -2,6 +2,13 @@
 
 from runner import Runner
 import imp
+import os
+import re
+import sys
+
+from guido import Guido
+
+_GUIDO = Guido()
 
 class PythonRunner(Runner):
   @staticmethod
@@ -14,8 +21,13 @@ class PythonRunner(Runner):
       exec(ready_to_run)
       return True
     except:
-      raise
+      print "Unexpected error: " sys.exec_info()[0]
+      return False
 
+  def run_bulk(self, test_body, num_args, file_regex):
+    functions = _GUIDO.search(num_args, file_regex)
+    good = [f in functions if self.run(test_body, { "filepath" : f.filepath, "name" : f.name })]
+    return good
 
   @staticmethod
   def _fill_test(test, filepath, function_name):
