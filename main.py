@@ -1,14 +1,33 @@
 from flask import Flask
 app = Flask(__name__)
 app.config['DEBUG'] = True
+from google.appengine.api.taskqueue import Queue, Task
+from google.appengine.api import taskqueue
 
 from guido.datastore_guido import DatastoreGuido
+from scanner.scanner import scan_config
 
 dg = DatastoreGuido()
 
-
 def get_results(*args, **kwargs):
   return [f.name + "(" + ', '.join(f.args) + ")" for f in dg.search(*args, **kwargs)]
+
+@app.route('/push')
+def push():
+    q = Queue()
+    task = Task(url='/work')
+    rpc = q.add_async(task)
+    return str(rpc.get_result())
+    # taskqueue.add(url='/work')
+    # return 'meow'
+
+@app.route('/work', methods=['POST'])
+def work():
+    return 'helloworld'
+
+@app.route('/ingest')
+def ingest():
+    scan_config()
 
 @app.route('/')
 def hello():

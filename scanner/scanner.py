@@ -1,14 +1,15 @@
 import compiler
 import json
+import logging
 import os
 
-from guido import Guido
+from guido import DefaultGuido
 
 
-_GUIDO = Guido()
+_GUIDO = DefaultGuido()
+_DEFAULT_CONFIG = os.path.join(os.path.dirname(__file__), 'codebase.json')
 
-
-def scan_config(config_file='codebase.json'):
+def scan_config(config_file=_DEFAULT_CONFIG):
   config = json.load(open(config_file))
   for root, extensions in config:
     scan_dir(root, extensions)
@@ -18,7 +19,10 @@ def scan_dir(path, extensions):
   for root, unused_dirs, files in os.walk(path):
     for f in files:
       if any([f.endswith(ext) for ext in extensions]):
-        ingest_file(os.path.join(root, f))
+        try:
+          ingest_file(os.path.join(root, f))
+        except Exception as e:
+          logging.warning(e.message)
 
 def ingest_file(path):
   ast = compiler.parseFile(path)

@@ -1,1 +1,1 @@
-from .local_guido import LocalGuido as Guido
+from .datastore_guido import DatastoreGuido as DefaultGuido
