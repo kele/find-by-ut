@@ -40,6 +40,9 @@ class FunctionVisitor(compiler.visitor.ASTVisitor):
                     filepath=self.filepath,
                     line=node.lineno)
 
-if __name__ == '__main__':
+def main():
   scan_config()
   _GUIDO.flush()
+
+if __name__ == '__main__':
+  main()
