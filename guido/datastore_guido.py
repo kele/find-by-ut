@@ -13,9 +13,9 @@ class FunctionMetadata(ndb.Model):
 
 
 class DatastoreGuido(guido.Guido):
-  def __init__(self, cache_limit = 100000):
-    self.cache_limit = cache_limit
-    self.cache = []
+  def __init__(self, buffer_limit = 100000):
+    self.buffer_limit = buffer_limit
+    self.buffer = []
 
   def add_lazy(self, name, args, def_Args, filepath, location):
     f = FunctionMetadata(
@@ -26,9 +26,9 @@ class DatastoreGuido(guido.Guido):
         num_of_def_args=len(def_args),
         filepath=filepath,
         location=location)
-    self.cache.append(f)
+    self.buffer.append(f)
 
-    if len(self.cache) >= self.cache_limit:
+    if len(self.buffer) >= self.buffer_limit:
       self.flush()
 
   def add(self, name, args, def_args, filepath, location):
@@ -36,14 +36,14 @@ class DatastoreGuido(guido.Guido):
     self.flush()
 
   def flush(self):
-    for f in self.cache:
+    for f in self.buffer:
       q = FunctionMetadata.query(f.name == name)
       q = q.filter(f.filepath == filepath).get()
       if q:
         return
       f.put()
 
-    self.cache = []
+    self.buffer = []
 
   def search(self, num_args):
     q = FunctionMetadata.query(FunctionMetadata.num_of_args <= num_args)
