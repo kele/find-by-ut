@@ -33,13 +33,12 @@ class Guido:
       file_regex (string): regex to filter filepath
 
     Returns:
-      {
-        'module' : string,        # name of the module to import
-        'name': string,           # name of the function
-        'filepath' : string,      # filepath
-        'location' : (int, int),  # start line and end line
-        'args' : [string],        # names of the non-default arguments
-        'def_args': [string]      # names of the default arguments
-      }
+      Object with following properties:
+        module : string,        # name of the module to import
+        name: string,           # name of the function
+        filepath : string,      # filepath
+        location : (int, int),  # start line and end line
+        args : [string],        # names of the non-default arguments
+        def_args: [string]      # names of the default arguments
     """
     raise NotImplementedError
