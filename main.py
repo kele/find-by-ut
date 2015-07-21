@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, Markup
 app = Flask(__name__)
 app.config['DEBUG'] = True
 from google.appengine.api.taskqueue import Queue, Task
@@ -55,7 +55,7 @@ def run(code):
 
   good = r.run_bulk(code, ".*")
 
-  return '\n'.join([g.name + "@" + g.filepath for g in good])
+  return '<br>'.join([g.name + " @ " + g.filepath for g in good])
 
 @app.route('/frontend')
 def frontend():
@@ -64,4 +64,4 @@ def frontend():
 @app.route('/backend', methods=['POST'])
 def backend():
   code = request.form['code']
-  return render_template('action.html', code=code, result=run(code))
+  return render_template('action.html', code=code, result=Markup(run(code)))
