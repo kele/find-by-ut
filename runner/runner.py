@@ -1,6 +1,7 @@
 #! /usr/bin/env python2
 
 class Runner:
+  @staticmethod
   def get_supported_languages():
     """
     Returns:

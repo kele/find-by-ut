@@ -4,11 +4,12 @@ from runner import Runner
 import imp
 
 class PythonRunner(Runner):
+  @staticmethod
   def get_supported_languages():
     return ["python"]
 
   def run(self, test, env):
-    ready_to_run = self._fill_test(test, env["filename"], env["name"])
+    ready_to_run = self._fill_test(test, env["filepath"], env["name"])
     try:
       exec(ready_to_run)
       return True
