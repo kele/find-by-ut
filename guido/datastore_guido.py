@@ -1,6 +1,11 @@
-import guido
+# TODO: add quicker lookup using directories as a tree like structure
+# TODO:
+
 
 from google.appengine.ext import ndb
+import guido
+import os
+import re
 
 class FunctionMetadata(ndb.Model):
   name = ndb.StringProperty()
@@ -17,7 +22,7 @@ class DatastoreGuido(guido.Guido):
     self.buffer_limit = buffer_limit
     self.buffer = []
 
-  def add_lazy(self, name, args, def_Args, filepath, location):
+  def add_lazy(self, name, args, def_args, filepath, location):
     f = FunctionMetadata(
         name=name,
         args=args,
@@ -37,14 +42,20 @@ class DatastoreGuido(guido.Guido):
 
   def flush(self):
     for f in self.buffer:
-      q = FunctionMetadata.query(f.name == name)
-      q = q.filter(f.filepath == filepath).get()
+      q = FunctionMetadata.query(FunctionMetadata.name == f.name)
+      q = q.filter(FunctionMetadata.filepath == f.filepath).get()
       if q:
-        return
+        continue
       f.put()
 
     self.buffer = []
 
-  def search(self, num_args):
+  def search(self, num_args, directory_regex=None):
     q = FunctionMetadata.query(FunctionMetadata.num_of_args <= num_args)
-    return [f for f in q.fetch() if f.num_of_args + f.num_of_def_args >= num_args]
+
+    dir_regex = re.compile(directory_regex or ".*")
+    dir_matcher = lambda f: dir_regex.match(f.filepath)
+
+    args_matcher = lambda f: f.num_of_args + f.num_of_def_args >= num_args
+
+    return [f for f in q.fetch() if dir_matcher(f) and args_matcher(f)]
