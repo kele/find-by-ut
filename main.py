@@ -27,7 +27,7 @@ def work():
 
 @app.route('/ingest')
 def ingest():
-  from scanner import main as main_scanner
+  from scanner.scanner import main as main_scanner
   main_scanner()
   return "Done!"
 
