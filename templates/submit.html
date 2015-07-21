@@ -11,7 +11,7 @@
             <div id="content">
                 <form method="post" action="{{ url_for('backend') }}">
                   <label for="code">Type your unit test.</label>
-                  <textarea name="code" rows="5" cols="60"></textarea>
+                  <textarea name="code" rows="5" cols="60">assert(FUNCTION("abc def") == "Abc Def")</textarea><br />
                   <input type="submit" />
                 </form>
             </div>
