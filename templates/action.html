@@ -5,21 +5,24 @@
     </head>
     <body>
         <img id="logo" src="{{ url_for('static', filename='miarki_kumple.png') }}"></img><br />
-        <div id="container">
-            <div class="title">
-                <h1>Content</h1>
-            </div>
+        <div style="text-align: center;">
+          <div id="container" style="display: inline-block;">
+            <div id="content" style="text-align: left;">
+              <div class="title">
+                  <h1>Unit test</h1>
+              </div>
 
-            <code><pre>
+              <code><pre>
 {{code}}
-            </pre></code>
+              </pre></code>
 
-            <div class="title">
-                <h1>Results</h1>
-            </div>
-            <div id="content">
+              <div class="title">
+                  <h1>Results</h1>
+              </div>
+              <code><pre>
 {{result}}
-            </div>
+              </pre></code>
+          </div>
         </div>
     </body>
 </html>
