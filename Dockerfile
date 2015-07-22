@@ -3,7 +3,7 @@
 FROM gcr.io/google_appengine/python-compat
 RUN apt-get update && apt-get install -y git
 RUN mkdir /codebase
-RUN git clone https://github.com/python-git/python.git /codebase/python
+#RUN git clone https://github.com/python-git/python.git /codebase/python
 RUN yes | pip install flask
 ADD . /app
 ADD ./small_python_project /codebase/small_python_project
