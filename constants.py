@@ -1,5 +1,9 @@
 import os
 
+from google.appengine.api.app_identity.app_identity import get_default_version_hostname
+
 RUNNER_ENDPOINT = '/runner'
 RESULT_KEYNAME = 'RESULT'
-HOST = 'localhost:8080' if os.environ.get('INSTANCE_ID') == '0' else 'hackaton-1009.appspot.com'
+SERVER_SOFTWARE = os.environ.get('SERVER_SOFTWARE')
+IS_PRODUCTION = SERVER_SOFTWARE.startswith('Google')
+HOST = get_default_version_hostname() if IS_PRODUCTION else 'localhost:8080'
