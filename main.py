@@ -8,20 +8,21 @@ app.config['DEBUG'] = True
 from constants import RUNNER_ENDPOINT
 from google.appengine.api import taskqueue
 from scanner.scanner import scan_config
+from runner.python_runner import PythonRunner
 import dispatcher
 
-@app.route('/dispatch')
-def push():
-    disp = dispatcher.Dispatcher()
-    disp.dispatch('test!!', '/codebase/small_python_project')
-    res = disp.get_results()
-    return str(res)
+pr = PythonRunner()
+disp = dispatcher.Dispatcher()
+
 
 @app.route(RUNNER_ENDPOINT, methods=['POST'])
 def work():
-    # Do some work here and find a list of function ids that work.
-    results = ['123', '456', '789']
-    return json.dumps(results)
+  regex = request.form.get("regex")
+  test = request.form.get("test")
+
+  results = [{'name' : r.name, 'path' : r.filepath } for r in pr.run_bulk(test, regex)]
+  return json.dumps(results)
+
 
 @app.route('/scan')
 def ingest():
@@ -29,17 +30,25 @@ def ingest():
   count = main_scanner()
   return "Done! Number of scanned entries: " + str(count)
 
+
 def run(code):
   from runner.python_runner import PythonRunner
   r = PythonRunner()
   good = r.run_bulk(code, ".*")
   return '<br>'.join([g.name + " @ " + g.filepath for g in good])
 
+
 @app.route('/')
 def frontend():
   return render_template('submit.html')
 
+
+def dispatch(code, regex):
+  disp.dispatch(code, regex)
+  res = disp.get_results()
+  return str(res)
+
 @app.route('/backend', methods=['POST'])
 def backend():
   code = request.form['code']
-  return render_template('action.html', code=code, result=Markup(run(code)))
+  return render_template('action.html', code=code, result=Markup(dispatch(code, "/codebase")))

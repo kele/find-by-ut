@@ -45,4 +45,5 @@ class Dispatcher(object):
       if result.status_code == 200:
         json_res = json.loads(result.content)
         matched_functions.extend(json_res)
+    self._rpc_pool = []
     return matched_functions
