@@ -5,17 +5,10 @@ from flask import Flask, Markup, render_template, request, url_for
 app = Flask(__name__)
 app.config['DEBUG'] = True
 
+from constants import RUNNER_ENDPOINT
 from google.appengine.api import taskqueue
-
-from guido.datastore_guido import DatastoreGuido
 from scanner.scanner import scan_config
 import dispatcher
-from constants import RUNNER_ENDPOINT
-
-dg = DatastoreGuido()
-
-def get_results(*args, **kwargs):
-  return [f.name + "(" + ', '.join(f.args) + ")" for f in dg.search(*args, **kwargs)]
 
 @app.route('/dispatch')
 def push():
