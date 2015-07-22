@@ -16,12 +16,15 @@ class FunctionMetadata(ndb.Model):
 
 
 class DatastoreGuido(guido.Guido):
+  key = ndb.Key("FunctionsAncestor", "global")
+
   def __init__(self, buffer_limit = 10):
     self.buffer_limit = buffer_limit
     self.buffer = []
 
   def add_lazy(self, name, args, def_args, filepath, location):
     f = FunctionMetadata(
+        parent=self.key,
         name=name,
         args=args,
         num_of_args=len(args),
@@ -40,7 +43,8 @@ class DatastoreGuido(guido.Guido):
 
   def flush(self):
     for f in self.buffer:
-      q = FunctionMetadata.query(FunctionMetadata.name == f.name)
+      q = FunctionMetadata.query(ancestor=self.key)
+      q = q.filter(FunctionMetadata.name == f.name)
       q = q.filter(FunctionMetadata.filepath == f.filepath).get()
       if q:
         continue
@@ -49,7 +53,8 @@ class DatastoreGuido(guido.Guido):
     self.buffer = []
 
   def search(self, num_args, file_regex=None):
-    q = FunctionMetadata.query(FunctionMetadata.num_of_args <= num_args)
+    q = FunctionMetadata.query(ancestor=self.key)
+    q = q.filter(FunctionMetadata.num_of_args <= num_args)
 
     dir_regex = re.compile(file_regex or ".*")
     dir_matcher = lambda f: dir_regex.match(f.filepath)
@@ -57,3 +62,5 @@ class DatastoreGuido(guido.Guido):
     args_matcher = lambda f: f.num_of_args + f.num_of_def_args >= num_args
 
     return [f for f in q.fetch() if dir_matcher(f) and args_matcher(f)]
+
+
