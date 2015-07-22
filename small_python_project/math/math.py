@@ -52,7 +52,7 @@ def math_expm1(x):
   return math.expm1(x)
 
 def math_log(x, base=math.e):
-  return math.log(x, base=math.e)
+  return math.log(x, base)
 
 def math_log1p(x):
   return math.log1p(x)
