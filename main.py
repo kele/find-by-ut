@@ -31,13 +31,6 @@ def ingest():
   return "Done! Number of scanned entries: " + str(count)
 
 
-def run(code):
-  from runner.python_runner import PythonRunner
-  r = PythonRunner()
-  good = r.run_bulk(code, ".*")
-  return '<br>'.join([g.name + " @ " + g.filepath for g in good])
-
-
 @app.route('/')
 def frontend():
   return render_template('submit.html')
@@ -50,6 +43,7 @@ def dispatch(code, regex):
 @app.route('/backend', methods=['POST'])
 def backend():
   code = request.form['code']
+  code = '\n'.join([c.rstrip() for c in code.split('\n')])
   return render_template('action.html', code=code, result=dispatch(code, "/codebase"))
 
 @app.route('/info')
