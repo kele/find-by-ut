@@ -44,8 +44,11 @@ class PythonRunner(Runner):
         self.num_args = -1
 
       def visitCallFunc(self, node):
-        if node.node.name == "FUNCTION":
-          self.num_args = len(node.args)
+        try:
+          if node.node.name == "FUNCTION":
+            self.num_args = len(node.args)
+        except:
+          pass
 
     ast = compiler.parse(test_body)
     visitor = CallVisitor()
