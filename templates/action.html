@@ -19,9 +19,11 @@
               <div class="title">
                   <h1>Results</h1>
               </div>
-              <code><pre>
-{{result}}
-              </pre></code>
+              <div class="results">
+                    {% for res in result %}
+                    {{res['name']}}: {{res['path']}}<br>
+                    {% endfor %}
+              </div>
           </div>
         </div>
     </body>

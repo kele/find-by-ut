@@ -45,13 +45,12 @@ def frontend():
 
 def dispatch(code, regex):
   disp.dispatch(code, regex)
-  res = disp.get_results()
-  return str(res)
+  return disp.get_results()
 
 @app.route('/backend', methods=['POST'])
 def backend():
   code = request.form['code']
-  return render_template('action.html', code=code, result=Markup(dispatch(code, "/codebase")))
+  return render_template('action.html', code=code, result=dispatch(code, "/codebase"))
 
 @app.route('/info')
 def info():
