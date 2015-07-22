@@ -60,8 +60,10 @@ RUNNER_ENDPOINT = {RUNNER_ENDPOINT}<br>
 RESULT_KEYNAME = {RESULT_KEYNAME}<br>
 SERVER_SOFTWARE = {SERVER_SOFTWARE}<br>
 IS_PRODUCTION = {IS_PRODUCTION}<br>
+DEFAULT_VERSION_HOSTNAME = {DEFAULT_VERSION_HOSTNAME}<br>
 HOST = {HOST}""".format(RUNNER_ENDPOINT=constants.RUNNER_ENDPOINT,
                         RESULT_KEYNAME=constants.RESULT_KEYNAME,
                         SERVER_SOFTWARE=constants.SERVER_SOFTWARE,
                         IS_PRODUCTION=constants.IS_PRODUCTION,
-                        HOST=constants.HOST)
+                        HOST=constants.HOST,
+                        DEFAULT_VERSION_HOSTNAME=constants.DEFAULT_VERSION_HOSTNAME)
