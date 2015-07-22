@@ -9,4 +9,4 @@ handlers:
   script: main.app
 
 manual_scaling:
-    instances: 3
+    instances: 1
