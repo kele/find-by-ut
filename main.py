@@ -5,7 +5,7 @@ from flask import Flask, Markup, render_template, request, url_for
 app = Flask(__name__)
 app.config['DEBUG'] = True
 
-from constants import RUNNER_ENDPOINT
+import constants
 from google.appengine.api import taskqueue
 from scanner.scanner import scan_config
 from runner.python_runner import PythonRunner
@@ -15,7 +15,7 @@ pr = PythonRunner()
 disp = dispatcher.Dispatcher()
 
 
-@app.route(RUNNER_ENDPOINT, methods=['POST'])
+@app.route(constants.RUNNER_ENDPOINT, methods=['POST'])
 def work():
   regex = request.form.get("regex")
   test = request.form.get("test")
@@ -52,3 +52,16 @@ def dispatch(code, regex):
 def backend():
   code = request.form['code']
   return render_template('action.html', code=code, result=Markup(dispatch(code, "/codebase")))
+
+@app.route('/info')
+def info():
+  return """
+RUNNER_ENDPOINT = {RUNNER_ENDPOINT}<br>
+RESULT_KEYNAME = {RESULT_KEYNAME}<br>
+SERVER_SOFTWARE = {SERVER_SOFTWARE}<br>
+IS_PRODUCTION = {IS_PRODUCTION}<br>
+HOST = {HOST}""".format(RUNNER_ENDPOINT=constants.RUNNER_ENDPOINT,
+                        RESULT_KEYNAME=constants.RESULT_KEYNAME,
+                        SERVER_SOFTWARE=constants.SERVER_SOFTWARE,
+                        IS_PRODUCTION=constants.IS_PRODUCTION,
+                        HOST=constants.HOST)

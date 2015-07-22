@@ -24,7 +24,7 @@ class Dispatcher(object):
       encoded_payload = urllib.urlencode(payload)
       rpc = urlfetch.create_rpc()
       urlfetch.make_fetch_call(rpc,
-                               'http://{host}/{runner}'.format(host=HOST, runner=RUNNER_ENDPOINT),
+                               'http://{host}{runner}'.format(host=HOST, runner=RUNNER_ENDPOINT),
                                payload=encoded_payload,
                                method=urlfetch.POST)
       self._rpc_pool.append(rpc)
