@@ -1,30 +1,33 @@
 import os
+import urllib
+import json
 
-from google.appengine.api import taskqueue
+from google.appengine.api import taskqueue, urlfetch
 from google.appengine.ext import ndb
 
 from guido import DefaultGuido
 from constants import RUNNER_ENDPOINT
 from constants import RESULT_KEYNAME
-from result import Result
-import utils
+from constants import HOST
 
 class Dispatcher(object):
 
   def __init__(self):
-    self._id = self.__make_unique_id()
-    self._rpc_list = []
-
-  def __make_unique_id(self):
-    return os.environ.get('INSTANCE_ID', '1')
+    self._rpc_pool = []
 
   def dispatch(self, test, path):
     regexes = self._make_regexes(path)
-    payloads = [{'id': self._id, 'test': test, 'regex':reg} for reg in regexes]
+    payloads = [{'test': test, 'regex':reg} for reg in regexes]
 
+    rpc_pool = []
     for payload in payloads:
-      new_task = taskqueue.Task(params=payload, url=RUNNER_ENDPOINT)
-      self._rpc_list.append(new_task.add_async())
+      encoded_payload = urllib.urlencode(payload)
+      rpc = urlfetch.create_rpc()
+      urlfetch.make_fetch_call(rpc,
+                               'http://{host}/{runner}'.format(host=HOST, runner=RUNNER_ENDPOINT),
+                               payload=encoded_payload,
+                               method=urlfetch.POST)
+      self._rpc_pool.append(rpc)
 
   def _make_regexes(self, path):
     regexes = []
@@ -36,14 +39,10 @@ class Dispatcher(object):
     return regexes
 
   def get_results(self):
-    for rpc in self._rpc_list:
-      rpc.wait()
-
-    key = utils.get_result_key_from_id(self._id)
-    res_query = Result.query(ancestor=key)
-
     matched_functions = []
-    for result in res_query:
-      for func in result.matched_functions:
-        matched_functions.append(func)
+    for rpc in self._rpc_pool:
+      result = rpc.get_result()
+      if result.status_code == 200:
+        json_res = json.loads(result.content)
+        matched_functions.extend(json_res)
     return matched_functions
