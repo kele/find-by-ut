@@ -1,0 +1,7 @@
+Find by unit test
+
+Have you ever looked for a piece of code, that you know is implemented somewhere
+in the codebase or the standard library, but have no idea how to find it?
+
+Since you know how your desired function should behave, you can write a unit
+test for it, right? Do so, we'll find the function for you.
